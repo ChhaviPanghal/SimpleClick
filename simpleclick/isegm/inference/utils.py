@@ -5,7 +5,7 @@ import numpy as np
 
 from isegm.data.datasets import GrabCutDataset, BerkeleyDataset, DavisDataset, \
     SBDEvaluationDataset, PascalVocDataset, BraTSDataset, ssTEMDataset, OAIZIBDataset, \
-    HARDDataset, ADE20kDataset
+    HARDDataset, ADE20kDataset, HQSeg44kDataset
 from isegm.utils.serialization import load_model
 
 
@@ -48,6 +48,7 @@ def load_single_is_model(state_dict, device, **kwargs):
 
 
 def get_dataset(dataset_name, cfg):
+    """Get dataset for validation"""
     if dataset_name == 'GrabCut':
         dataset = GrabCutDataset(cfg.GRABCUT_PATH)
     elif dataset_name == 'Berkeley':
@@ -72,6 +73,8 @@ def get_dataset(dataset_name, cfg):
         dataset = HARDDataset(cfg.HARD_PATH)
     elif dataset_name == 'ADE20K':
         dataset = ADE20kDataset(cfg.ADE20K_PATH, split='val')
+    elif dataset_name == 'HQSeg44K':
+        dataset = HQSeg44kDataset(cfg.HQSeg44K_PATH, split='val')
     else:
         dataset = None
 
@@ -137,8 +140,8 @@ def find_checkpoint(weights_folder, checkpoint_name):
 def get_results_table(noc_list, over_max_list, brs_type, dataset_name, mean_spc, elapsed_time,
                       n_clicks=20, model_name=None):
     table_header = (f'|{"Predictor":^13}|{"Dataset":^11}|'
-                    f'{"NoC@80%":^9}|{"NoC@85%":^9}|{"NoC@90%":^9}|'
-                    f'{">="+str(n_clicks)+"@85%":^9}|{">="+str(n_clicks)+"@90%":^9}|'
+                    f'{"NoC@85%":^9}|{"NoC@90%":^9}|{"NoC@95%":^9}|'
+                    f'{">="+str(n_clicks)+"@90%":^9}|{">="+str(n_clicks)+"@95%":^9}|'
                     f'{"SPC,s":^7}|{"Time":^9}|')
     row_width = len(table_header)
 
